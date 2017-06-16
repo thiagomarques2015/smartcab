@@ -89,7 +89,7 @@ class Simulator(object):
         
         if self.log_metrics:
             a = self.env.primary_agent
-
+            
             # Set log files
             if a.learning:
                 if self.optimized: # Whether the user is optimizing the parameters and decay functions
@@ -101,7 +101,7 @@ class Simulator(object):
 
                 self.table_file = open(self.table_filename, 'wb')
             else:
-                self.log_filename = os.path.join("logs", "sim_no-learning.csv")
+                self.log_filename = os.path.join("..\logs", "sim_no-learning.csv")
             
             self.log_fields = ['trial', 'testing', 'parameters', 'initial_deadline', 'final_deadline', 'net_reward', 'actions', 'success']
             self.log_file = open(self.log_filename, 'wb')
