@@ -206,7 +206,7 @@ def run():
     #       3 - 1.0/(t**2-at)
     #       4 - ASB(COS(at))
     #       5 - ASB(COS(at))/(t**2)
-    agent = env.create_agent(LearningAgent, learning=True, alpha=0.01, epsilon=1, exploration=4)
+    agent = env.create_agent(LearningAgent, learning=True, alpha=0.95, epsilon=1, exploration=2)
     
     ##############
     # Follow the driving agent
@@ -228,7 +228,7 @@ def run():
     # Flags:
     #   tolerance  - epsilon tolerance before beginning testing, default is 0.05 
     #   n_test     - discrete number of testing trials to perform, default is 0
-    sim.run(n_test=10, tolerance=0.0001)
+    sim.run(n_test=10, tolerance=0.00005)
 
 
 if __name__ == '__main__':
