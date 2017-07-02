@@ -25,6 +25,7 @@ class LearningAgent(Agent):
         ###########
         # Set any additional class parameters as needed
         self.t = 0
+        random.seed(666)
 
 
     def reset(self, destination=None, testing=False):
