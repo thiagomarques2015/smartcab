@@ -134,9 +134,12 @@ class LearningAgent(Agent):
         # When not learning, choose a random action
         # When learning, choose a random action with 'epsilon' probability
         #   Otherwise, choose an action with the highest Q-value for the current state
-        maxQ = self.get_maxQ(state)
-        best_actions = [action for action in self.valid_actions if self.Q[state][action] == maxQ]
-        action = random.choice(best_actions)
+        if not self.learning:
+            action = random.choice(self.valid_actions)
+        else:
+            maxQ = self.get_maxQ(state)
+            best_actions = [action for action in self.valid_actions if self.Q[state][action] == maxQ]
+            action = random.choice(best_actions)
 
         return action
 
@@ -217,7 +220,7 @@ def run():
     # Flags:
     #   tolerance  - epsilon tolerance before beginning testing, default is 0.05 
     #   n_test     - discrete number of testing trials to perform, default is 0
-    sim.run(n_test=10, tolerance=0.00005)
+    sim.run(n_test=10, tolerance=0.00001)
 
 
 if __name__ == '__main__':
