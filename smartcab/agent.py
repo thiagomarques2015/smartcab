@@ -84,8 +84,8 @@ class LearningAgent(Agent):
                 return str(state)
         
         state = state_str(waypoint) + "_" + inputs['light'] + "_" + state_str(inputs['left']) + "_" + state_str(inputs['right']) + "_" +  state_str(inputs['oncoming'])
-        if self.learning:
-            self.Q[state] = self.Q.get(state, {None:0.0, 'forward':0.0, 'left':0.0, 'right':0.0})
+        self.createQ(state) # Create 'state' in Q-table
+        
         return state
 
 
@@ -98,10 +98,7 @@ class LearningAgent(Agent):
         ###########
         # Calculate the maximum Q-value of all actions for a given state
 
-        maxQ = -1000.0
-        for action in self.Q[state]:
-            if maxQ < self.Q[state][action]:
-                maxQ = self.Q[state][action]
+        maxQ = max(self.Q[state].values())
 
         return maxQ 
 
@@ -116,8 +113,8 @@ class LearningAgent(Agent):
         # If it is not, create a new dictionary for that state
         #   Then, for each action available, set the initial Q-value to 0.0
 
-        if self.learning:
-            self.Q[state] = self.Q.get(state, {None:0.0, 'forward':0.0, 'left':0.0, 'right':0.0})
+        if (self.learning) and (state not in self.Q):
+            self.Q[state] = {action: 0.0 for action in self.valid_actions}
             
         return
 
@@ -137,18 +134,8 @@ class LearningAgent(Agent):
         # When not learning, choose a random action
         # When learning, choose a random action with 'epsilon' probability
         #   Otherwise, choose an action with the highest Q-value for the current state
-        if not self.learning:
-            action = random.choice(self.valid_actions)
-        else:
-            if self.epsilon > 0.01 and self.epsilon > random.random():
-                action = random.choice(self.valid_actions)
-            else:
-                valid_actions = []
-                maxQ = self.get_maxQ(state)
-                for act in self.Q[state]:
-                    if maxQ == self.Q[state][act]:
-                        valid_actions.append(act)
-                action = random.choice(valid_actions)
+        best_actions = [action for action in self.valid_actions if self.Q[state][action] == maxQ]
+        action = random.choice(best_actions)
 
         return action
 
