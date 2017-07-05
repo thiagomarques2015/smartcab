@@ -83,7 +83,7 @@ class LearningAgent(Agent):
             else:
                 return str(state)
         
-        state = state_str(waypoint) + "_" + inputs['light'] + "_" + state_str(inputs['left']) + "_" + state_str(inputs['right']) + "_" +  state_str(inputs['oncoming'])
+        state = state_str(waypoint) + "_" + inputs['light'] + "_" + state_str(inputs['left']) + "_" +  state_str(inputs['oncoming'])
         self.createQ(state) # Create 'state' in Q-table
         
         return state
@@ -134,12 +134,17 @@ class LearningAgent(Agent):
         # When not learning, choose a random action
         # When learning, choose a random action with 'epsilon' probability
         #   Otherwise, choose an action with the highest Q-value for the current state
+        possible_actions = self.Q[state]
         if not self.learning:
-            action = random.choice(self.valid_actions)
+            action = random.choice(possible_actions)
         else:
-            maxQ = self.get_maxQ(state)
-            best_actions = [action for action in self.valid_actions if self.Q[state][action] == maxQ]
-            action = random.choice(best_actions)
+            choose_using_epsilon = random.random() < 1 - self.epsilon
+            if not choose_using_epsilon:
+                maxQ = self.get_maxQ(state)
+                best_actions = [action for action in possible_actions if self.Q[state][action] == maxQ]
+                action = random.choice(best_actions)
+            else:
+                action = max(possible_actions.items(), key=lambda x: x[1])[0]                
 
         return action
 
